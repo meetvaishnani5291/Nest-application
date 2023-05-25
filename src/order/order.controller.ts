@@ -9,7 +9,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
   @Post('placeOrder')
-  placeOrder(@Body('order') order: CreateOrderDTO, @InsertUser() user) {
+  placeOrder(@Body() order: CreateOrderDTO, @InsertUser() user) {
     return this.orderService.createOrder(order.products, user);
   }
 }

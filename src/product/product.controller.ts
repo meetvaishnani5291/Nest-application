@@ -10,10 +10,7 @@ import { IsSeller } from './IsSeller.guard';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
   @Post('create')
-  async createProduct(
-    @Body('product') product: CreateProductDTO,
-    @InsertUser() user,
-  ) {
+  async createProduct(@Body() product: CreateProductDTO, @InsertUser() user) {
     return await this.productService.create(product, user);
   }
   @Get()

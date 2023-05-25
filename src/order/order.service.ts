@@ -6,11 +6,11 @@ import { OrderDetails } from './entities/orderDetail.entity';
 import { OrderItemDTO } from './dto/CreateOrder.dto';
 import { TransactionService } from 'src/transaction/transaction.service';
 import { ProductService } from 'src/product/product.service';
+import { Product } from 'src/product/product.entity';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectRepository(Order) private orderRepository: Repository<Order>,
     @InjectRepository(OrderDetails)
     private orderDetailsRepository: Repository<OrderDetails>,
     private productService: ProductService,
@@ -38,6 +38,8 @@ export class OrderService {
             throw new BadRequestException(
               `product with id: ${item.productId} has not enough quantity`,
             );
+          product.quantity -= item.quantity;
+          await queryRunner.manager.save(Product, product);
           return item;
         }),
       );

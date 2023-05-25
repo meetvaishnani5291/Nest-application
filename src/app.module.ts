@@ -23,9 +23,9 @@ import { TransactionModule } from './transaction/transaction.module';
 //   entities: [],
 //   synchronize: true,
 // };
+
 @Module({
   imports: [
-    UserModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -41,6 +41,7 @@ import { TransactionModule } from './transaction/transaction.module';
       }),
       inject: [ConfigService],
     }),
+    UserModule,
     AuthModule,
     ProductModule,
     OrderModule,

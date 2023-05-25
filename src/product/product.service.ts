@@ -15,6 +15,9 @@ export class ProductService {
     newProduct.seller = user;
     return await this.productRepository.save(newProduct);
   }
+  async save(product) {
+    return await this.productRepository.save(product);
+  }
   async getAllProducts(user) {
     return await this.productRepository.findBy({ seller: user });
   }

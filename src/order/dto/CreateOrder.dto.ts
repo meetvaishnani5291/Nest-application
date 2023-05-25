@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class OrderItemDTO {
   @IsInt()
@@ -20,6 +21,7 @@ export class OrderItemDTO {
 }
 
 export class CreateOrderDTO {
+  @ApiProperty()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderItemDTO)
