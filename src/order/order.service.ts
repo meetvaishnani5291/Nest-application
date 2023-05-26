@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { OrderDetails } from './entities/orderDetail.entity';
-import { OrderItemDTO } from './dto/CreateOrder.dto';
 import { TransactionService } from 'src/transaction/transaction.service';
 import { ProductService } from 'src/product/product.service';
 import { Product } from 'src/product/product.entity';
+import { OrderItemDTO } from './dto/CreateOrder.dto';
 
 @Injectable()
 export class OrderService {
@@ -56,7 +56,7 @@ export class OrderService {
       // Transaction : COMMIT
       await this.transactionService.commitTransaction(queryRunner);
 
-      return { success: true, orderId: placedOrder.id };
+      return order;
     } catch (error) {
       // Transaction : ROLLBACK
       await this.transactionService.rollbackTransaction(queryRunner);

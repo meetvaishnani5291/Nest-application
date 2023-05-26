@@ -3,10 +3,11 @@ import {
   IsEmail,
   IsNotEmpty,
   IsIn,
-  IsAlphanumeric,
   MinLength,
+  IsAlphanumeric,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 export class CreateUserDTO {
   @ApiProperty({
@@ -34,6 +35,7 @@ export class CreateUserDTO {
     example: 'xyz@123',
   })
   @MinLength(6)
+  @IsString()
   password: string;
 
   @ApiProperty({ enum: ['buyer', 'seller'] })

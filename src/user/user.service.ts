@@ -14,9 +14,6 @@ export class UserService {
     await this.userRepository.save(user);
     return user;
   }
-  insert(user: CreateUserDTO) {
-    return this.userRepository.insert(user);
-  }
   findByEmail(email: string) {
     return this.userRepository.findOneBy({
       email,

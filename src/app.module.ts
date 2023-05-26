@@ -1,8 +1,7 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
@@ -12,6 +11,7 @@ import { OrderModule } from './order/order.module';
 import { Order } from './order/entities/order.entity';
 import { OrderDetails } from './order/entities/orderDetail.entity';
 import { TransactionModule } from './transaction/transaction.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 // const connectionOptions: TypeOrmModuleOptions = {
 //   type: 'mysql',
@@ -47,7 +47,12 @@ import { TransactionModule } from './transaction/transaction.module';
     OrderModule,
     TransactionModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: ClassSerializerInterceptor,
+    // },
+  ],
 })
 export class AppModule {}

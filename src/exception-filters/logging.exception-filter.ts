@@ -11,6 +11,7 @@ import { logger } from 'src/utils/logger';
 @Catch()
 export class LoggerExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
+    console.log(exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const statusCode = exception.getStatus();
