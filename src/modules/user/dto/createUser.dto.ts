@@ -4,10 +4,8 @@ import {
   IsNotEmpty,
   IsIn,
   MinLength,
-  IsAlphanumeric,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
 
 export class CreateUserDTO {
   @ApiProperty({

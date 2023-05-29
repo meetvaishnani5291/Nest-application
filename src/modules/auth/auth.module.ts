@@ -12,16 +12,21 @@ import { UserModule } from '../user/user.module';
     JwtModule.registerAsync({
       imports: [ConfigModule.forRoot()],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT.SECRET'),
+        secret: 'secret',
         signOptions: { expiresIn: '1d' },
-        // global: true,
+        global: true,
       }),
       inject: [ConfigService],
     }),
+    // JwtModule.register({
+    //   secret: 'secret',
+    //   signOptions: { expiresIn: '1d' },
+    //   global: true,
+    // }),
   ],
   providers: [
     AuthService,
-    JwtService,
+    // JwtService,
     {
       provide: 'hashPassword',
       useValue: hashPassword,
@@ -32,6 +37,6 @@ import { UserModule } from '../user/user.module';
     },
   ],
   controllers: [AuthController],
-  exports: [JwtService],
+  // exports: [JwtService],
 })
 export class AuthModule {}

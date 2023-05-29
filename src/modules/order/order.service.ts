@@ -14,6 +14,8 @@ export class OrderService {
   constructor(
     @InjectRepository(OrderDetails)
     private orderDetailsRepository: Repository<OrderDetails>,
+    @InjectRepository(OrderDetails)
+    private orderRepository: Repository<Order>,
     private productService: ProductService,
     private transactionService: TransactionService,
   ) {}
@@ -66,15 +68,13 @@ export class OrderService {
     }
   }
 
-  // async showOrder(user) {
-  //   const queryBuilder = this.orderRepository.createQueryBuilder('order');
-
-  //   const orders = await queryBuilder
-  //     .leftJoinAndSelect('order.products', 'product')
-  //     .leftJoin('product.user', 'user')
-  //     .where('user.id = :id', { id: user.id })
-  //     .getMany();
-
-  //   return orders;
-  // }
+  async getOrders(user: User) {
+    const queryBuilder = this.orderRepository.createQueryBuilder('order');
+    const orders = await queryBuilder
+      .leftJoinAndSelect('order.products', 'product')
+      .leftJoin('product.user', 'user')
+      .where('user.id = :id', { id: user.id })
+      .getMany();
+    return orders;
+  }
 }

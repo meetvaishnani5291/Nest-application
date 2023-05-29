@@ -15,17 +15,7 @@ import { LoggerExceptionFilter } from './exception-filters/logging.exception-fil
 import { CommonResponseInterceptor } from './interceptors/commonResponse.interceptor';
 import { AuthGuard } from './guards/auth.guard';
 import configuration from './config/config';
-
-// const connectionOptions: TypeOrmModuleOptions = {
-//   type: 'mysql',
-//   host: 'localhost',
-//   port: 3306,
-//   username: 'root',
-//   password: 'Meet@123',
-//   database: 'ecommerce',
-//   entities: [],
-//   synchronize: true,
-// };
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -41,6 +31,15 @@ import configuration from './config/config';
         database: configService.get<string>('DB.NAME'),
         entities: [User, Product, Order, OrderDetails],
         // synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule.forRoot()],
+      useFactory: (configService: ConfigService) => ({
+        secret: 'secret',
+        signOptions: { expiresIn: '1d' },
+        global: true,
       }),
       inject: [ConfigService],
     }),

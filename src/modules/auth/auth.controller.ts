@@ -13,13 +13,12 @@ import { errorResponseDto } from 'src/DTOs/error.dto';
 import { CreateUserDTO } from '../user/dto/createUser.dto';
 import { LoginUserDTO } from '../user/dto/loginUser.dto';
 import { Public } from 'src/decorators/publicRoutes.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
 
 @ApiTags('auth')
 @Public()
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authServie: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @ApiResponse({
     type: errorResponseDto,
@@ -30,8 +29,7 @@ export class AuthController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
   register(@Body() user: CreateUserDTO) {
-    console.log(user);
-    return this.authServie.register(user);
+    return this.authService.register(user);
   }
 
   @ApiResponse({
@@ -43,6 +41,6 @@ export class AuthController {
   @Post('login')
   login(@Body() user: LoginUserDTO) {
     const { email, password } = user;
-    return this.authServie.login(email, password);
+    return this.authService.login(email, password);
   }
 }

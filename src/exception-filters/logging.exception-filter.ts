@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
+import { errorResponseDto } from 'src/DTOs/error.dto';
 import { logger } from 'src/utils/logger';
 
 @Catch()
@@ -15,6 +16,7 @@ export class LoggerExceptionFilter implements ExceptionFilter {
   constructor(private readonly configService: ConfigService) {}
 
   catch(exception: HttpException, host: ArgumentsHost) {
+    console.log(exception);
     const logObject =
       this.configService.get<string>('ENVIRONMENT') === 'devlopment'
         ? { exception, path: exception.stack }
@@ -28,14 +30,15 @@ export class LoggerExceptionFilter implements ExceptionFilter {
 
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const statusCode = exception.getStatus();
-    let responseBody;
+    let statusCode: number;
+    let responseBody: errorResponseDto;
 
     if (exception instanceof HttpException) {
-      responseBody = exception.getResponse();
+      statusCode = exception.getStatus();
+      responseBody = exception.getResponse() as errorResponseDto;
     } else {
-      const responseBody = {
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      responseBody = {
+        statusCode: 500,
         message: 'Somethig went wrong!',
         error: 'Internal Server Error',
       };
