@@ -8,7 +8,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import { User } from '../user/user.entity';
-import { Order } from 'src/order/entities/order.entity';
+import { Order } from '../order/entities/order.entity';
 
 @Entity()
 export class Product {

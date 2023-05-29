@@ -3,17 +3,20 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Post,
+  UseGuards,
   UseInterceptors,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDTO } from 'src/user/dto/createUser.dto';
-import { LoginUserDTO } from 'src/user/dto/loginUser.dto';
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { responseDTO } from 'src/DTOs/response.dto';
-import { errorResponseDto } from 'src/exception-filters/dto/error.dto';
+import { errorResponseDto } from 'src/DTOs/error.dto';
+import { CreateUserDTO } from '../user/dto/createUser.dto';
+import { LoginUserDTO } from '../user/dto/loginUser.dto';
+import { Public } from 'src/decorators/publicRoutes.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @ApiTags('auth')
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authServie: AuthService) {}

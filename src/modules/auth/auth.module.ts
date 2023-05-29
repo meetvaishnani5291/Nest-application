@@ -1,32 +1,27 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UserModule } from 'src/user/user.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { comparePassword, hashPassword } from './helper/encryptPassword.util';
-import { AuthGuard } from './auth.guard';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     UserModule,
-    // JwtModule.registerAsync({
-    //   imports: [ConfigModule.forRoot()],
-    //   useFactory: (configService: ConfigService) => ({
-    //     secret: configService.get<string>('JWT_SECRET'),
-    //     signOptions: { expiresIn: '60s' },
-    //     global: true,
-    //   }),
-    //   inject: [ConfigService],
-    // }),
-    JwtModule.register({
-      secret: 'secret',
-      signOptions: { expiresIn: '1d' },
-      global: true,
+    JwtModule.registerAsync({
+      imports: [ConfigModule.forRoot()],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT.SECRET'),
+        signOptions: { expiresIn: '1d' },
+        // global: true,
+      }),
+      inject: [ConfigService],
     }),
   ],
   providers: [
     AuthService,
-    // AuthGuard,
+    JwtService,
     {
       provide: 'hashPassword',
       useValue: hashPassword,
@@ -37,6 +32,6 @@ import { AuthGuard } from './auth.guard';
     },
   ],
   controllers: [AuthController],
-  // exports: [AuthGuard],
+  exports: [JwtService],
 })
 export class AuthModule {}

@@ -1,16 +1,20 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/modules/user/user.service';
 
 @Injectable()
-
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.get('isPublic', context.getClass());
+    if (isPublic) return true;
+
     const request = context.switchToHttp().getRequest();
     const authorizationHeader = request.headers.authorization;
     if (authorizationHeader && authorizationHeader.startsWith('Bearer ')) {

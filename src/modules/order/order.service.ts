@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { OrderDetails } from './entities/orderDetail.entity';
-import { TransactionService } from 'src/transaction/transaction.service';
-import { ProductService } from 'src/product/product.service';
-import { Product } from 'src/product/product.entity';
 import { OrderItemDTO } from './dto/CreateOrder.dto';
+import { Product } from '../product/product.entity';
+import { ProductService } from '../product/product.service';
+import { TransactionService } from '../transaction/transaction.service';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class OrderService {
@@ -17,7 +18,7 @@ export class OrderService {
     private transactionService: TransactionService,
   ) {}
 
-  async createOrder(orderItems: OrderItemDTO[], user) {
+  async createOrder(orderItems: OrderItemDTO[], user: User) {
     // Transaction : START
     const queryRunner = await this.transactionService.startTransaction();
 

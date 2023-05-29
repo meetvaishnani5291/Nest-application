@@ -15,9 +15,11 @@ export class TransactionService {
 
   async commitTransaction(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.commitTransaction();
+    await queryRunner.release();
   }
 
   async rollbackTransaction(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.rollbackTransaction();
+    await queryRunner.release();
   }
 }

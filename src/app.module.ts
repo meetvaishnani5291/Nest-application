@@ -1,17 +1,20 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
-import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { User } from './user/user.entity';
-import { AuthModule } from './auth/auth.module';
-import { ProductModule } from './product/product.module';
-import { Product } from './product/product.entity';
-import { OrderModule } from './order/order.module';
-import { Order } from './order/entities/order.entity';
-import { OrderDetails } from './order/entities/orderDetail.entity';
-import { TransactionModule } from './transaction/transaction.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { AuthModule } from './modules/auth/auth.module';
+import { Order } from './modules/order/entities/order.entity';
+import { OrderDetails } from './modules/order/entities/orderDetail.entity';
+import { OrderModule } from './modules/order/order.module';
+import { Product } from './modules/product/product.entity';
+import { ProductModule } from './modules/product/product.module';
+import { TransactionModule } from './modules/transaction/transaction.module';
+import { User } from './modules/user/user.entity';
+import { UserModule } from './modules/user/user.module';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggerExceptionFilter } from './exception-filters/logging.exception-filter';
+import { CommonResponseInterceptor } from './interceptors/commonResponse.interceptor';
+import { AuthGuard } from './guards/auth.guard';
+import configuration from './config/config';
 
 // const connectionOptions: TypeOrmModuleOptions = {
 //   type: 'mysql',
@@ -26,16 +29,16 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ cache: true, isGlobal: true, load: configuration }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        host: configService.get<string>('DATABASE_HOST'),
-        port: parseInt(configService.get<string>('DATABASE_PORT')),
-        username: configService.get<string>('DATABASE_USERNAME'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
-        database: configService.get<string>('DATABASE_NAME'),
+        host: configService.get<string>('DB.HOST'),
+        port: parseInt(configService.get<string>('PORT')),
+        username: configService.get<string>('DB.USERNAME'),
+        password: configService.get<string>('DB.PASSWORD'),
+        database: configService.get<string>('DB.NAME'),
         entities: [User, Product, Order, OrderDetails],
         // synchronize: true,
       }),
@@ -48,11 +51,22 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     TransactionModule,
   ],
   providers: [
-    AppService,
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: ClassSerializerInterceptor,
-    // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CommonResponseInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: LoggerExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}

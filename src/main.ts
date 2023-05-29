@@ -1,15 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { LoggerExceptionFilter } from './exception-filters/logging.exception-filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { CommonResponseInterceptor } from './interceptors/commonResponse.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  app.useGlobalFilters(new LoggerExceptionFilter());
-  app.useGlobalInterceptors(new CommonResponseInterceptor());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   const config = new DocumentBuilder()
     .setTitle('Ecommerce')
@@ -24,7 +20,7 @@ async function bootstrap() {
         description: 'Enter JWT token',
         in: 'header',
       },
-      'Authorization', // This name here is important for matching up with @ApiBearerAuth() in your controller!
+      'Authorization',
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);
