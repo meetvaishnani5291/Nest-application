@@ -2,13 +2,13 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
-import { Order } from './modules/order/entities/order.entity';
-import { OrderDetails } from './modules/order/entities/orderDetail.entity';
+import { Order } from './entities/order.entity';
+import { OrderDetails } from './entities/orderDetail.entity';
 import { OrderModule } from './modules/order/order.module';
-import { Product } from './modules/product/product.entity';
+import { Product } from './entities/product.entity';
 import { ProductModule } from './modules/product/product.module';
 import { TransactionModule } from './modules/transaction/transaction.module';
-import { User } from './modules/user/user.entity';
+import { User } from './entities/user.entity';
 import { UserModule } from './modules/user/user.module';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerExceptionFilter } from './exception-filters/logging.exception-filter';
@@ -37,9 +37,9 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.registerAsync({
       imports: [ConfigModule.forRoot()],
       useFactory: (configService: ConfigService) => ({
-        secret: 'secret',
+        secret: configService.get<string>('JWT.SECRET'),
         signOptions: { expiresIn: '1d' },
-        global: true,
+        // global: true,
       }),
       inject: [ConfigService],
     }),

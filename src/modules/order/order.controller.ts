@@ -10,7 +10,7 @@ import { CreateOrderDTO } from './dto/CreateOrder.dto';
 import { errorResponseDto } from 'src/DTOs/error.dto';
 import { responseDTO } from 'src/DTOs/response.dto';
 import { InsertUser } from 'src/decorators/InsertUser.decorator';
-import { User } from '../user/user.entity';
+import { User } from '../../entities/user.entity';
 
 @ApiTags('order')
 @ApiBearerAuth('Authorization')
@@ -25,12 +25,20 @@ export class OrderController {
     type: responseDTO,
   })
   @Post('placeOrder')
-  async placeOrder(@Body() order: CreateOrderDTO, @InsertUser() user: User) {
-    return await this.orderService.createOrder(order.products, user);
+  async placeOrder(@Body() newOrder: CreateOrderDTO, @InsertUser() user: User) {
+    const order = await this.orderService.createOrder(newOrder.products, user);
+    return { order };
   }
 
+  @ApiResponse({
+    type: errorResponseDto,
+  })
+  @ApiCreatedResponse({
+    type: responseDTO,
+  })
   @Get()
   async getOrders(@InsertUser() user: User) {
-    return await this.orderService.getOrders(user);
+    const orders = await this.orderService.getOrders(user);
+    return { orders };
   }
 }

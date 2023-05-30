@@ -12,8 +12,8 @@ import {
 import { responseDTO } from 'src/DTOs/response.dto';
 import { errorResponseDto } from 'src/DTOs/error.dto';
 import { InsertUser } from 'src/decorators/InsertUser.decorator';
-import { Product } from './product.entity';
-import { User } from '../user/user.entity';
+import { Product } from '../../entities/product.entity';
+import { User } from '../../entities/user.entity';
 
 @ApiTags('product')
 @ApiBearerAuth('Authorization')
@@ -30,10 +30,14 @@ export class ProductController {
   })
   @Post('create')
   async createProduct(
-    @Body() product: CreateProductDTO,
+    @Body() newProduct: CreateProductDTO,
     @InsertUser() user: User,
   ) {
-    return await this.productService.create(product as Product, user);
+    const product = await this.productService.create(
+      newProduct as Product,
+      user,
+    );
+    return { product };
   }
 
   @ApiResponse({
@@ -44,6 +48,7 @@ export class ProductController {
   })
   @Get()
   async getProducts(@InsertUser() user: User) {
-    return await this.productService.getAllProducts(user);
+    const products = await this.productService.getAllProducts(user);
+    return { products };
   }
 }

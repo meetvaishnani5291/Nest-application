@@ -1,5 +1,3 @@
-import { Product } from 'src/modules/product/product.entity';
-import { User } from 'src/modules/user/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,6 +7,8 @@ import {
   JoinTable,
   JoinColumn,
 } from 'typeorm';
+import { Product } from './product.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Order {

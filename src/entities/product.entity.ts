@@ -7,8 +7,8 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { User } from '../user/user.entity';
-import { Order } from '../order/entities/order.entity';
+import { User } from './user.entity';
+import { Order } from './order.entity';
 
 @Entity()
 export class Product {

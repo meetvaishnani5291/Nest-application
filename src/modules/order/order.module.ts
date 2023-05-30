@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Order } from './entities/order.entity';
+import { Order } from '../../entities/order.entity';
 import { AuthModule } from '../auth/auth.module';
-import { Product } from '../product/product.entity';
+import { Product } from '../../entities/product.entity';
 import { ProductModule } from '../product/product.module';
 import { TransactionModule } from '../transaction/transaction.module';
 import { UserModule } from '../user/user.module';
-import { OrderDetails } from './entities/orderDetail.entity';
+import { OrderDetails } from '../../entities/orderDetail.entity';
 
 @Module({
   imports: [

@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Order } from '../order/entities/order.entity';
+import { Order } from './order.entity';
 
 @Entity()
 export class User {

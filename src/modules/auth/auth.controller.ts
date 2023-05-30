@@ -3,7 +3,6 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Post,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -28,8 +27,9 @@ export class AuthController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
-  register(@Body() user: CreateUserDTO) {
-    return this.authService.register(user);
+  async register(@Body() newUser: CreateUserDTO) {
+    const user = await this.authService.register(newUser);
+    return { user };
   }
 
   @ApiResponse({

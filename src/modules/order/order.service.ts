@@ -1,20 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Order } from './entities/order.entity';
-import { OrderDetails } from './entities/orderDetail.entity';
+import { Order } from '../../entities/order.entity';
+import { OrderDetails } from '../../entities/orderDetail.entity';
 import { OrderItemDTO } from './dto/CreateOrder.dto';
-import { Product } from '../product/product.entity';
+import { Product } from '../../entities/product.entity';
 import { ProductService } from '../product/product.service';
 import { TransactionService } from '../transaction/transaction.service';
-import { User } from '../user/user.entity';
+import { User } from '../../entities/user.entity';
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(OrderDetails)
     private orderDetailsRepository: Repository<OrderDetails>,
-    @InjectRepository(OrderDetails)
+    @InjectRepository(Order)
     private orderRepository: Repository<Order>,
     private productService: ProductService,
     private transactionService: TransactionService,
@@ -72,8 +72,8 @@ export class OrderService {
     const queryBuilder = this.orderRepository.createQueryBuilder('order');
     const orders = await queryBuilder
       .leftJoinAndSelect('order.products', 'product')
-      .leftJoin('product.user', 'user')
-      .where('user.id = :id', { id: user.id })
+      .leftJoinAndSelect('product.seller', 'seller')
+      .where('order.customer = :id', { id: user.id })
       .getMany();
     return orders;
   }
