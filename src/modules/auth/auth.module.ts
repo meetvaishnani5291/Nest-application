@@ -18,15 +18,9 @@ import { UserModule } from '../user/user.module';
       }),
       inject: [ConfigService],
     }),
-    // JwtModule.register({
-    //   secret: 'secret',
-    //   signOptions: { expiresIn: '1d' },
-    //   global: true,
-    // }),
   ],
   providers: [
     AuthService,
-    // JwtService,
     {
       provide: 'hashPassword',
       useValue: hashPassword,
@@ -37,6 +31,5 @@ import { UserModule } from '../user/user.module';
     },
   ],
   controllers: [AuthController],
-  // exports: [JwtService],
 })
 export class AuthModule {}

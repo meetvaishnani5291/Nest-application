@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { UserService } from '../modules/user/user.service';
 
 @Injectable()
 export class IsSeller implements CanActivate {

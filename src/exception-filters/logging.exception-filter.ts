@@ -5,7 +5,6 @@ import {
   HttpException,
   BadRequestException,
   HttpStatus,
-  HttpCode,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';

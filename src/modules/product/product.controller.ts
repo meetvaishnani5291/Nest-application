@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDTO } from './dto/createProduct.dto';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { IsSeller } from './IsSeller.guard';
+import { IsSeller } from '../../guards/IsSeller.guard';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,

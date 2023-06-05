@@ -9,12 +9,11 @@ export class OrderDetails {
 
   @PrimaryColumn()
   orderId: number;
-  //   @PrimaryColumn()s
+
   @ManyToOne(() => Product, (product) => product.id)
   @JoinColumn({ name: 'productId' })
   product: Product;
 
-  //   @PrimaryColumn()
   @ManyToOne(() => Order, (order) => order.id)
   @JoinColumn({ name: 'orderId' })
   order: Order;

@@ -1,15 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import helmet from 'helmet';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-
+function configureSwagger(app: INestApplication, ENVIRONMENT) {
   const config = new DocumentBuilder()
-    .setTitle('Ecommerce')
-    .setDescription('Ecommerce API description')
+    .setTitle('Product Store')
+    .setDescription('Product Store API description')
     .setVersion('1.0')
     .addBearerAuth(
       {
@@ -17,15 +16,29 @@ async function bootstrap() {
         scheme: 'bearer',
         bearerFormat: 'JWT',
         name: 'JWT',
-        description: 'Enter JWT token',
+        description: 'JWT token',
         in: 'header',
       },
       'Authorization',
     )
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  const document = SwaggerModule.createDocument(app, config);
+  if (ENVIRONMENT === 'devlopment') SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document);
+}
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.use(helmet());
+
+  const configService = app.get(ConfigService);
+  const ENVIRONMENT = configService.get<string>('ENVIRONMENT');
+  const PORT = +configService.get<string>('APP_PORT', '3001');
+
+  configureSwagger(app, ENVIRONMENT);
+
+  await app.listen(PORT);
 }
 bootstrap();
