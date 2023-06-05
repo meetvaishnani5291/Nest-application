@@ -24,7 +24,9 @@ export class AuthService {
 
   async login(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
-    if (await this.comparePassword(user?.password, password)) {
+
+    if (!user) throw new UnauthorizedException();
+    if (await this.comparePassword(user.password, password)) {
       throw new UnauthorizedException();
     }
     const payload = { id: user.id, name: user.name };
