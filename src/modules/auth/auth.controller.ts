@@ -7,11 +7,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { responseDTO } from 'src/DTOs/response.dto';
-import { errorResponseDto } from 'src/DTOs/error.dto';
+import { responseDTO } from '../../DTOs/response.dto';
+import { errorResponseDto } from '../../DTOs/error.dto';
 import { CreateUserDTO } from '../user/dto/createUser.dto';
 import { LoginUserDTO } from '../user/dto/loginUser.dto';
-import { Public } from 'src/decorators/publicRoutes.decorator';
+import { Public } from '../../decorators/publicRoutes.decorator';
 
 @ApiTags('auth')
 @Public()
@@ -29,7 +29,7 @@ export class AuthController {
   @Post('register')
   async register(@Body() newUser: CreateUserDTO) {
     const user = await this.authService.register(newUser);
-    return { user };
+    return user;
   }
 
   @ApiResponse({

@@ -26,7 +26,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
 
     if (!user) throw new UnauthorizedException();
-    if (await this.comparePassword(user.password, password)) {
+    if (!(await this.comparePassword(user.password, password))) {
       throw new UnauthorizedException();
     }
     const payload = { id: user.id, name: user.name };
@@ -43,7 +43,7 @@ export class AuthService {
 
     const hashedPassword = await this.hashPassword(password);
     newUser = { ...newUser, password: hashedPassword };
-
-    return await this.userService.create(newUser);
+    newUser = await this.userService.create(newUser);
+    return newUser;
   }
 }
