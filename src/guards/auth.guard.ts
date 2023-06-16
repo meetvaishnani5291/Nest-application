@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/modules/user/user.service';
+import { UserService } from '../modules/user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -23,7 +23,6 @@ export class AuthGuard implements CanActivate {
       try {
         const { id: userId } = this.jwtService.verify(token);
         request.user = await this.userService.findById(userId);
-
         return true;
       } catch (error) {
         // Token verification failed

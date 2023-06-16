@@ -26,7 +26,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
 
     if (!user) throw new UnauthorizedException();
-    if (!(await this.comparePassword(user.password, password))) {
+    if (!(await this.comparePassword(password, user.password))) {
       throw new UnauthorizedException();
     }
     const payload = { id: user.id, name: user.name };

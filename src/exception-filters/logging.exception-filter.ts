@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
-import { errorResponseDto } from 'src/DTOs/error.dto';
-import { logger } from 'src/utils/logger';
+import { errorResponseDto } from '../DTOs/error.dto';
+import { logger } from '../utils/logger';
 
 @Catch()
 export class LoggerExceptionFilter implements ExceptionFilter {

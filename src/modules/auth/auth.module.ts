@@ -10,7 +10,6 @@ import { UserModule } from '../user/user.module';
   imports: [
     UserModule,
     JwtModule.registerAsync({
-      imports: [ConfigModule.forRoot()],
       useFactory: (configService: ConfigService) => ({
         secret: 'secret',
         signOptions: { expiresIn: '1d' },

@@ -8,11 +8,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { responseDTO } from 'src/DTOs/response.dto';
-import { errorResponseDto } from 'src/DTOs/error.dto';
-import { InsertUser } from 'src/decorators/InsertUser.decorator';
 import { Product } from '../../entities/product.entity';
 import { User } from '../../entities/user.entity';
+import { errorResponseDto } from '../../DTOs/error.dto';
+import { responseDTO } from '../../DTOs/response.dto';
+import { InsertUser } from '../../decorators/InsertUser.decorator';
 
 @ApiTags('product')
 @ApiBearerAuth('Authorization')
@@ -36,7 +36,7 @@ export class ProductController {
       newProduct as Product,
       user,
     );
-    return { product };
+    return product;
   }
 
   @ApiResponse({
@@ -48,6 +48,6 @@ export class ProductController {
   @Get()
   async getProducts(@InsertUser() user: User) {
     const products = await this.productService.getAllProducts(user);
-    return { products };
+    return products;
   }
 }

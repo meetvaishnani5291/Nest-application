@@ -5,7 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 
-function configureSwagger(app: INestApplication, ENVIRONMENT) {
+function configureSwagger(app: INestApplication, ENVIRONMENT: string) {
   const config = new DocumentBuilder()
     .setTitle('Product Store')
     .setDescription('Product Store API description')
@@ -24,7 +24,7 @@ function configureSwagger(app: INestApplication, ENVIRONMENT) {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  if (ENVIRONMENT === 'devlopment') SwaggerModule.setup('api', app, document);
+  // if (ENVIRONMENT === 'devlopment')
   SwaggerModule.setup('api', app, document);
 }
 

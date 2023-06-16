@@ -7,10 +7,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateOrderDTO } from './dto/CreateOrder.dto';
-import { errorResponseDto } from 'src/DTOs/error.dto';
-import { responseDTO } from 'src/DTOs/response.dto';
-import { InsertUser } from 'src/decorators/InsertUser.decorator';
 import { User } from '../../entities/user.entity';
+import { responseDTO } from '../../DTOs/response.dto';
+import { errorResponseDto } from '../../DTOs/error.dto';
+import { InsertUser } from '../../decorators/InsertUser.decorator';
 
 @ApiTags('order')
 @ApiBearerAuth('Authorization')

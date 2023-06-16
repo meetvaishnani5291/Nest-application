@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { comparePassword, hashPassword } from './helper/encryptPassword.util';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';

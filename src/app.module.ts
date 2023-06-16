@@ -19,13 +19,17 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ cache: true, isGlobal: true, load: configuration }),
+    ConfigModule.forRoot({
+      cache: true,
+      isGlobal: true,
+      envFilePath: getEnvFilePath(),
+      load: configuration,
+    }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
         host: configService.get<string>('DB.HOST'),
-        port: parseInt(configService.get<string>('PORT')),
+        port: parseInt(configService.get<string>('DB.PORT')),
         username: configService.get<string>('DB.USERNAME'),
         password: configService.get<string>('DB.PASSWORD'),
         database: configService.get<string>('DB.NAME'),
@@ -35,7 +39,6 @@ import { JwtModule } from '@nestjs/jwt';
       inject: [ConfigService],
     }),
     JwtModule.registerAsync({
-      imports: [ConfigModule.forRoot()],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT.SECRET'),
         signOptions: { expiresIn: '1d' },
@@ -69,3 +72,15 @@ import { JwtModule } from '@nestjs/jwt';
   ],
 })
 export class AppModule {}
+
+function getEnvFilePath(): string {
+  const ENVIRONMENT = process.env.ENVIRONMENT;
+
+  if (ENVIRONMENT === 'production') {
+    return '.env';
+  } else if (ENVIRONMENT === 'test') {
+    return '.env.test';
+  } else if (ENVIRONMENT === 'devlopment') {
+    return '.env';
+  }
+}
