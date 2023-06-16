@@ -27,7 +27,7 @@ export class OrderController {
   @Post('placeOrder')
   async placeOrder(@Body() newOrder: CreateOrderDTO, @InsertUser() user: User) {
     const order = await this.orderService.createOrder(newOrder.products, user);
-    return { order };
+    return  order ;
   }
 
   @ApiResponse({
@@ -39,6 +39,6 @@ export class OrderController {
   @Get()
   async getOrders(@InsertUser() user: User) {
     const orders = await this.orderService.getOrders(user);
-    return { orders };
+    return  orders ;
   }
 }

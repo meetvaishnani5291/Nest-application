@@ -24,7 +24,7 @@ describe('AppController (e2e)', () => {
     quantity: 10,
     price: 100000,
   };
-  let order = beforeAll(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -58,9 +58,10 @@ describe('AppController (e2e)', () => {
       });
   });
   it('/auth/register (POST) -> register with already exist email', () => {
+    const {id,...existingUser} =user;
     return request(app.getHttpServer())
       .post('/auth/register')
-      .send(user)
+      .send(existingUser)
       .expect(400);
   });
   it('/auth/register (POST) -> invalid body(role is not passed)', () => {
@@ -138,6 +139,24 @@ describe('AppController (e2e)', () => {
         );
       });
   });
+  it('/product/create (POST) -> quantity less than zero', () => {
+    const { id: _id, ...newProduct } = product;
+    return request(app.getHttpServer())
+      .post('/product/create')
+      .set('Authorization', `Bearer ${token}`)
+      .send({...newProduct,quantity:-1})
+      .expect(400)
+  });
+  it('/product/create (POST) -> price less than zero', () => {
+    const { id: _id, ...newProduct } = product;
+    return request(app.getHttpServer())
+      .post('/product/create')
+      .set('Authorization', `Bearer ${token}`)
+      .send({...newProduct,price:-1})
+      .expect(400)
+      .then((response) => {
+      })
+  });
   it('/product (GET) -> ', () => {
     return request(app.getHttpServer())
       .get('/product')
@@ -168,30 +187,76 @@ describe('AppController (e2e)', () => {
       .set('Authorization', `Bearer ${token}-invalid`)
       .expect(403);
   });
-  // it('/order/create (POST) -> ', () => {
-  //   const { id: _id, ...newOrder } = order;
-  //   return request(app.getHttpServer())
-  //     .post('/order/create')
-  //     .set('Authorization', `Bearer ${token}`)
-  //     .send(newOrder)
-  //     .expect(201)
-  //     .then((response) => {
-  //       order.id = response.body.data.id;
-  //       expect(response.body).toEqual(
-  //         expect.objectContaining({
-  //           success: true,
-  //           data: expect.objectContaining({
-  //             ...order,
-  //             id: expect.any(Number),
-  //           }),
-  //         }),
-  //       );
-  //     });
-  // });
+  it('/order/placeOrder (POST) -> ', () => {
+    const newOrder ={
+      products :[{productId : product.id,quantity: product.quantity}]
+    }
+    return request(app.getHttpServer())
+      .post('/order/placeOrder')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newOrder)
+      .expect(201)
+      .then((response) => {
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            success: true,
+            data: expect.objectContaining({
+              id: expect.any(Number),
+              customer:expect.any(Object),
+              orderDate: expect.any(String),
+            }),
+          }),
+        );
+      });
+  });
+  it('/order/placeOrder (POST) -> add quantity more than available', () => {
+    const newOrder ={
+      products :[{productId : product.id,quantity: product.quantity+1}]
+    }
+    return request(app.getHttpServer())
+      .post('/order/placeOrder')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newOrder)
+      .expect(400);
+  });
+  it('/order/placeOrder (POST) -> add invaild productid', () => {
+    const newOrder ={
+      products :[{productId : product.id + 1,quantity: product.quantity}]
+    }
+    return request(app.getHttpServer())
+      .post('/order/placeOrder')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newOrder)
+      .expect(400);
+  });
+  it('/order/placeOrder (POST) -> no products in order', () => {
+    const newOrder ={
+      products :[]
+    }
+    return request(app.getHttpServer())
+      .post('/order/placeOrder')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newOrder)
+      .expect(400);
+  });
   it('/order (GET) -> ', () => {
     return request(app.getHttpServer())
       .get('/order')
       .set('Authorization', `Bearer ${token}`)
-      .expect(200);
+      .expect(200)
+      .then((response) => {
+        return  expect(response.body).toEqual(
+          expect.objectContaining({
+            success: true,
+            data: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(Number),
+                orderDate: expect.any(String),
+                products: expect.any(Object),
+              }),
+            ]),
+          }),
+        );
+      })
   });
 });

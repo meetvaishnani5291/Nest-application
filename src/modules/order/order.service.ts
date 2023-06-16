@@ -21,6 +21,10 @@ export class OrderService {
   ) {}
 
   async createOrder(orderItems: OrderItemDTO[], user: User) {
+
+    if(orderItems.length === 0)throw new BadRequestException(
+      `no order items`,
+    );
     // Transaction : START
     const queryRunner = await this.transactionService.startTransaction();
 
