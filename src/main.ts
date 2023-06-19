@@ -24,8 +24,7 @@ function configureSwagger(app: INestApplication, ENVIRONMENT: string) {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  // if (ENVIRONMENT === 'devlopment')
-  SwaggerModule.setup('api', app, document);
+  if (ENVIRONMENT === 'devlopment') SwaggerModule.setup('api', app, document);
 }
 
 async function bootstrap() {
